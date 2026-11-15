@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dapur Senja – Menu Makanan Digital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#faf4e8;--cream2:#f1e6d0;--white:#fffdf8;--brown:#3b2518;--brown2:#6b4a35;--orange:#d9772b;--orange-d:#b85f1c;--line:#e4d5ba;--r:14px;--ff:'Fraunces',Georgia,serif;--fb:'DM Sans',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{font-family:var(--fb);background:var(--cream);color:var(--brown);line-height:1.65}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+.wrap{max-width:1160px;margin:0 auto;padding:0 22px}
+section{padding:96px 0}
+h1,h2,h3{font-family:var(--ff);line-height:1.15;font-weight:700}
+h2{font-size:clamp(2rem,4vw,2.9rem);margin-bottom:14px}
+.lead{color:var(--brown2);max-width:560px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;border-radius:99px;font-weight:700;transition:.25s}
+.btn-primary{background:var(--orange);color:#fff}.btn-primary:hover{background:var(--orange-d);transform:translateY(-2px)}
+.btn-ghost{border:2px solid var(--brown);color:var(--brown)}.btn-ghost:hover{background:var(--brown);color:var(--cream)}
+/* Navbar */
+header{position:fixed;inset:0 0 auto;z-index:50;background:rgba(250,244,232,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav{display:flex;align-items:center;justify-content:space-between;height:70px}
+.logo{font-family:var(--ff);font-size:1.5rem;font-weight:700;display:flex;align-items:center;gap:9px}
+.logo i{width:34px;height:34px;border-radius:50%;background:var(--brown);color:var(--cream);display:grid;place-items:center;font-style:normal;font-size:1rem}
+.links{display:flex;gap:30px;list-style:none;align-items:center}
+.links a{font-weight:500;padding:6px 0;border-bottom:2px solid transparent;transition:.2s}
+.links a:hover,.links a.active{border-color:var(--orange)}
+.nav-right{display:flex;align-items:center;gap:12px}
+.cart-btn{position:relative;width:44px;height:44px;border-radius:50%;background:var(--white);border:1px solid var(--line);font-size:1.2rem}
+.badge{position:absolute;top:-4px;right:-4px;min-width:20px;height:20px;border-radius:99px;background:var(--orange);color:#fff;font-size:.72rem;font-weight:700;display:grid;place-items:center;padding:0 5px}
+.burger{display:none;width:44px;height:44px;flex-direction:column;justify-content:center;align-items:center;gap:5px}
+.burger span{width:22px;height:2px;background:var(--brown);transition:.3s}
+.burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+/* Hero */
+.hero{padding:130px 0 80px;min-height:100vh;display:flex;align-items:center}
+.hero .wrap{display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center}
+.hero h1{font-size:clamp(2.6rem,6vw,4.6rem);margin-bottom:22px}
+.hero p{font-size:1.1rem;color:var(--brown2);max-width:480px;margin-bottom:34px}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap}
+.hero-img{position:relative;aspect-ratio:4/5;border-radius:220px 220px var(--r) var(--r);overflow:hidden;background:var(--cream2);box-shadow:0 30px 60px -25px rgba(59,37,24,.45);animation:rise 1s ease both}
+.hero-img img{width:100%;height:100%;object-fit:cover}
+.hero-note{position:absolute;left:-18px;bottom:36px;background:var(--white);padding:14px 20px;border-radius:var(--r);box-shadow:0 14px 30px -14px rgba(59,37,24,.4);font-size:.9rem}
+.hero-note b{display:block;font-family:var(--ff);font-size:1.15rem}
+@keyframes rise{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
+/* Menu */
+#menu{background:var(--white)}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin:30px 0 40px}
+.tab{padding:10px 22px;border-radius:99px;border:1px solid var(--line);background:var(--cream);font-weight:500;transition:.2s}
+.tab:hover{border-color:var(--orange)}
+.tab.active{background:var(--brown);color:var(--cream);border-color:var(--brown)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:26px}
+.card{background:var(--cream);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;border:1px solid var(--line);transition:transform .3s,box-shadow .3s}
+.card:hover{transform:translateY(-5px);box-shadow:0 22px 36px -22px rgba(59,37,24,.5)}
+.thumb{aspect-ratio:4/3;background:linear-gradient(135deg,var(--cream2),#e7c99b);display:grid;place-items:center;font-size:3rem;overflow:hidden;position:relative}
+.thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.card:hover .thumb img{transform:scale(1.06)}
+.cbody{padding:18px 20px 20px;display:flex;flex-direction:column;gap:6px;flex:1}
+.cat{font-size:.8rem;color:var(--orange-d);font-weight:700}
+.card h3{font-size:1.2rem}
+.card p{font-size:.92rem;color:var(--brown2);flex:1}
+.cfoot{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+.price{font-weight:700;font-size:1.05rem}
+.add{background:var(--orange);color:#fff;padding:9px 16px;border-radius:99px;font-size:.88rem;font-weight:700;transition:.2s}
+.add:hover{background:var(--orange-d)}
+/* About */
+.about{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.about-imgs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.about-imgs div{border-radius:var(--r);overflow:hidden;background:var(--cream2);aspect-ratio:3/4}
+.about-imgs div:nth-child(2){margin-top:44px}
+.about-imgs img{width:100%;height:100%;object-fit:cover}
+.about p{color:var(--brown2);margin-bottom:16px}
+.perks{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:26px}
+.perk{padding-left:16px;border-left:3px solid var(--orange)}
+.perk b{display:block}.perk span{font-size:.9rem;color:var(--brown2)}
+/* Offers */
+#offers{background:var(--brown);color:var(--cream)}
+#offers .lead{color:#d9c3a5}
+.banner{margin:36px 0 26px;padding:44px;border-radius:var(--r);background:linear-gradient(120deg,var(--orange),#e99a4d);color:#2a170c;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+.banner h3{font-size:clamp(1.6rem,3.5vw,2.4rem);max-width:520px}
+.banner .btn{background:var(--brown);color:var(--cream)}
+.offers{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+.offer{padding:26px;border:1px solid rgba(250,244,232,.22);border-radius:var(--r)}
+.offer big{font-family:var(--ff);font-size:2.4rem;color:#f2a35f;display:block}
+.offer p{font-size:.92rem;color:#d9c3a5;margin:6px 0 16px}
+.offer button{border:1.5px solid var(--cream);padding:8px 18px;border-radius:99px;font-weight:700;font-size:.88rem;transition:.2s}
+.offer button:hover{background:var(--cream);color:var(--brown)}
+/* Contact */
+.contact{display:grid;grid-template-columns:1fr 1.1fr;gap:56px}
+.info{list-style:none;margin-top:26px;display:grid;gap:18px}
+.info li{display:flex;gap:14px}.info b{display:block}.info span{color:var(--brown2);font-size:.95rem}
+form{background:var(--white);border:1px solid var(--line);padding:32px;border-radius:var(--r);display:grid;gap:16px}
+label{font-weight:500;font-size:.92rem;display:grid;gap:6px}
+input,textarea{font:inherit;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--cream);color:var(--brown)}
+input:focus,textarea:focus{outline:2px solid var(--orange);border-color:transparent}
+textarea{min-height:120px;resize:vertical}
+.msg{font-size:.92rem;font-weight:500;min-height:1.4em}
+/* Footer */
+footer{background:var(--brown);color:#d9c3a5;padding:56px 0 26px}
+.fgrid{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;padding-bottom:30px;border-bottom:1px solid rgba(250,244,232,.18)}
+footer .logo{color:var(--cream)}footer .logo i{background:var(--orange)}
+.flinks{display:flex;gap:24px;list-style:none;flex-wrap:wrap}.flinks a:hover{color:var(--cream)}
+.social{display:flex;gap:10px}.social a{width:40px;height:40px;border-radius:50%;border:1px solid rgba(250,244,232,.3);display:grid;place-items:center;font-size:.85rem;font-weight:700;transition:.2s}
+.social a:hover{background:var(--orange);border-color:var(--orange);color:#fff}
+.copy{text-align:center;font-size:.85rem;padding-top:22px}
+/* Cart drawer */
+.overlay{position:fixed;inset:0;background:rgba(40,22,12,.5);opacity:0;pointer-events:none;transition:.3s;z-index:60}
+.overlay.show{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(420px,100%);background:var(--white);z-index:70;transform:translateX(100%);transition:transform .35s;display:flex;flex-direction:column}
+.drawer.show{transform:none}
+.dhead{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid var(--line)}
+.dhead h3{font-size:1.4rem}
+.close{width:38px;height:38px;border-radius:50%;font-size:1.3rem;background:var(--cream)}
+.items{flex:1;overflow-y:auto;padding:12px 24px}
+.empty{text-align:center;color:var(--brown2);padding:60px 10px}
+.item{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
+.item .im{width:64px;height:64px;border-radius:10px;background:var(--cream2);overflow:hidden;display:grid;place-items:center;position:relative}
+.item .im img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.item b{font-size:.95rem;display:block;line-height:1.3}.item small{color:var(--brown2)}
+.qty{display:flex;align-items:center;gap:8px;margin-top:6px}
+.qty button{width:26px;height:26px;border-radius:50%;border:1px solid var(--line);font-weight:700}
+.qty button:hover{background:var(--orange);color:#fff;border-color:var(--orange)}
+.rm{color:#a33;font-size:.82rem;text-decoration:underline}
+.dfoot{padding:20px 24px;border-top:1px solid var(--line);background:var(--cream)}
+.row{display:flex;justify-content:space-between;margin-bottom:6px;font-size:.95rem}
+.row.total{font-size:1.2rem;font-weight:700;margin:10px 0 16px}
+.promo{color:#2e7d32;font-weight:500}
+.dfoot .btn{width:100%}
+/* Modal */
+.modal{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:20px;background:rgba(40,22,12,.55);opacity:0;pointer-events:none;transition:.3s}
+.modal.show{opacity:1;pointer-events:auto}
+.mbox{background:var(--white);border-radius:var(--r);width:min(480px,100%);max-height:90vh;overflow-y:auto;padding:30px;transform:scale(.94);transition:.3s}
+.modal.show .mbox{transform:none}
+.mbox h3{font-size:1.5rem;margin-bottom:16px}
+.sum{margin:16px 0;padding:14px 16px;background:var(--cream);border-radius:10px}
+.mbox .btn{width:100%;margin-top:6px}
+/* Toast & reveal */
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,120px);background:var(--brown);color:var(--cream);padding:13px 24px;border-radius:99px;z-index:90;transition:transform .4s;box-shadow:0 14px 30px -10px rgba(0,0,0,.4);font-weight:500;max-width:90vw}
+.toast.show{transform:translate(-50%,0)}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s,transform .7s}
+.reveal.in{opacity:1;transform:none}
+@media(max-width:900px){
+ section{padding:72px 0}
+ .hero .wrap,.about,.contact{grid-template-columns:1fr}
+ .hero{min-height:auto}.hero-img{max-width:420px;margin:0 auto;width:100%}
+ .burger{display:flex}.order-nav{display:none}
+ .links{position:fixed;top:70px;left:0;right:0;flex-direction:column;gap:0;background:var(--cream);border-bottom:1px solid var(--line);max-height:0;overflow:hidden;transition:max-height .35s}
+ .links.open{max-height:360px}
+ .links li{width:100%;text-align:center}.links a{display:block;padding:16px;border:0}
+}
+@media(max-width:520px){.perks{grid-template-columns:1fr}.banner{padding:30px 24px}.hero-note{left:8px}form{padding:22px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header>
+ <div class="wrap">
+  <nav aria-label="Navigasi utama">
+   <a href="#home" class="logo"><i>D</i>Dapur Senja</a>
+   <ul class="links" id="links">
+    <li><a href="#home" class="active">Home</a></li>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#offers">Promo</a></li>
+    <li><a href="#contact">Contact</a></li>
+   </ul>
+   <div class="nav-right">
+    <button class="cart-btn" id="openCart" aria-label="Buka keranjang">🛒<span class="badge" id="badge">0</span></button>
+    <button class="btn btn-primary order-nav" id="orderNav">Order Now</button>
+    <button class="burger" id="burger" aria-label="Buka menu navigasi" aria-expanded="false"><span></span><span></span><span></span></button>
+   </div>
+  </nav>
+ </div>
+</header>
+
+<main>
+<section class="hero" id="home">
+ <div class="wrap">
+  <div>
+   <h1>Delicious Food, Unforgettable Moments</h1>
+   <p>Dapur Senja menyajikan masakan Nusantara dan hidangan penutup buatan tangan dari bahan segar pilihan, untuk makan siang santai maupun malam yang berkesan.</p>
+   <div class="hero-btns">
+    <a href="#menu" class="btn btn-primary">Explore Menu</a>
+    <button class="btn btn-ghost" id="orderHero">Order Now</button>
+   </div>
+  </div>
+  <div class="hero-img">
+   <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=900&q=80" alt="Hidangan utama Dapur Senja" onerror="this.style.display='none'">
+   <div class="hero-note"><b>Buka setiap hari</b>10.00 – 22.00 WIB</div>
+  </div>
+ </div>
+</section>
+
+<section id="menu">
+ <div class="wrap">
+  <div class="reveal">
+   <h2>Menu kami</h2>
+   <p class="lead">Pilih hidangan favoritmu, tambahkan ke keranjang, dan kami siapkan dengan segar.</p>
+  </div>
+  <div class="tabs" role="tablist" id="tabs">
+   <button class="tab active" data-cat="all">Semua</button>
+   <button class="tab" data-cat="Main Course">Main Course</button>
+   <button class="tab" data-cat="Appetizer">Appetizer</button>
+   <button class="tab" data-cat="Dessert">Dessert</button>
+   <button class="tab" data-cat="Beverages">Beverages</button>
+  </div>
+  <div class="grid" id="menuGrid"></div>
+ </div>
+</section>
+
+<section id="about">
+ <div class="wrap about">
+  <div class="about-imgs reveal">
+   <div><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=600&q=80" alt="Suasana restoran" loading="lazy" onerror="this.style.display='none'"></div>
+   <div><img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80" alt="Salad segar" loading="lazy" onerror="this.style.display='none'"></div>
+  </div>
+  <div class="reveal">
+   <h2>Dari dapur keluarga ke meja Anda</h2>
+   <p>Dapur Senja dimulai pada 2014 dari dapur kecil milik keluarga kami di Jawa Tengah. Resep warisan nenek kami masih menjadi dasar setiap hidangan, hanya kini dipadukan dengan teknik masak modern.</p>
+   <p>Kami memasak dalam porsi kecil setiap hari agar rasa dan kesegarannya terjaga.</p>
+   <div class="perks">
+    <div class="perk"><b>Bahan lokal segar</b><span>Dipasok langsung dari petani sekitar.</span></div>
+    <div class="perk"><b>Tanpa MSG</b><span>Rasa berasal dari rempah asli.</span></div>
+    <div class="perk"><b>Dimasak saat dipesan</b><span>Tidak ada makanan yang dihangatkan ulang.</span></div>
+    <div class="perk"><b>Pengantaran cepat</b><span>Tiba hangat dalam 30 menit.</span></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<section id="offers">
+ <div class="wrap">
+  <div class="reveal">
+   <h2>Promo spesial</h2>
+   <p class="lead">Klaim promo, lalu potongan harga otomatis diterapkan di keranjangmu.</p>
+  </div>
+  <div class="banner reveal">
+   <h3>Pesan pertama? Diskon 25% untuk semua menu.</h3>
+   <button class="btn" data-promo="PERTAMA25" data-pct="25">Klaim diskon 25%</button>
+  </div>
+  <div class="offers reveal">
+   <div class="offer"><big>15%</big><b>Makan siang hemat</b><p>Berlaku untuk pesanan di atas Rp100.000.</p><button data-promo="SIANG15" data-pct="15">Klaim promo</button></div>
+   <div class="offer"><big>10%</big><b>Paket keluarga</b><p>Untuk pesanan 4 hidangan atau lebih.</p><button data-promo="KELUARGA10" data-pct="10">Klaim promo</button></div>
+   <div class="offer"><big>20%</big><b>Manis di akhir pekan</b><p>Diskon spesial untuk dessert dan minuman.</p><button data-promo="MANIS20" data-pct="20">Klaim promo</button></div>
+  </div>
+ </div>
+</section>
+
+<section id="contact">
+ <div class="wrap contact">
+  <div class="reveal">
+   <h2>Hubungi kami</h2>
+   <p class="lead">Ada pertanyaan, reservasi, atau pesanan untuk acara? Kirim pesan dan kami balas dalam 1 hari kerja.</p>
+   <ul class="info">
+    <li>📍<div><b>Alamat</b><span>Jl. Jenderal Sudirman No. 21, Kutoarjo, Jawa Tengah</span></div></li>
+    <li>📞<div><b>Telepon</b><span>+62 812 3456 7890</span></div></li>
+    <li>✉️<div><b>Email</b><span>halo@dapursenja.id</span></div></li>
+    <li>🕙<div><b>Jam operasional</b><span>Setiap hari, 10.00 – 22.00 WIB</span></div></li>
+   </ul>
+  </div>
+  <form id="contactForm" class="reveal" novalidate>
+   <label>Nama<input type="text" id="cName" placeholder="Nama lengkap" required></label>
+   <label>Email<input type="email" id="cEmail" placeholder="nama@email.com" required></label>
+   <label>Pesan<textarea id="cMsg" placeholder="Tulis pesanmu di sini" required></textarea></label>
+   <button type="submit" class="btn btn-primary">Kirim pesan</button>
+   <div class="msg" id="formMsg" role="status"></div>
+  </form>
+ </div>
+</section>
+</main>
+
+<footer>
+ <div class="wrap">
+  <div class="fgrid">
+   <div><a href="#home" class="logo"><i>D</i>Dapur Senja</a><p style="margin-top:12px;max-width:260px;font-size:.92rem">Masakan hangat dengan resep keluarga sejak 2014.</p></div>
+   <ul class="flinks"><li><a href="#home">Home</a></li><li><a href="#menu">Menu</a></li><li><a href="#about">About</a></li><li><a href="#contact">Contact</a></li></ul>
+   <div class="social"><a href="#" aria-label="Instagram">IG</a><a href="#" aria-label="Facebook">FB</a><a href="#" aria-label="TikTok">TT</a><a href="#" aria-label="WhatsApp">WA</a></div>
+  </div>
+  <p class="copy">© <span id="year">2026</span> Dapur Senja. Seluruh hak cipta dilindungi.</p>
+ </div>
+</footer>
+
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" aria-label="Keranjang belanja" aria-hidden="true">
+ <div class="dhead"><h3>Keranjang</h3><button class="close" id="closeCart" aria-label="Tutup keranjang">×</button></div>
+ <div class="items" id="items"></div>
+ <div class="dfoot">
+  <div class="row"><span>Subtotal</span><span id="subtotal">Rp0</span></div>
+  <div class="row promo" id="promoRow" hidden><span id="promoName"></span><span id="promoAmt"></span></div>
+  <div class="row total"><span>Total</span><span id="total">Rp0</span></div>
+  <button class="btn btn-primary" id="checkoutBtn">Checkout</button>
+ </div>
+</aside>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+ <div class="mbox" id="mbox"></div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+ 'use strict';
+ const U = id => 'https://images.unsplash.com/photo-' + id + '?auto=format&fit=crop&w=700&q=75';
+ const PRODUCTS = [
+  {id:1,name:'Nasi Bakar Ayam Kemangi',cat:'Main Course',price:42000,e:'🍛',img:U('1565299624946-b28f40a0ae38'),desc:'Nasi gurih berisi ayam suwir kemangi, dibakar dalam daun pisang.'},
+  {id:2,name:'Rendang Daging Sapi',cat:'Main Course',price:68000,e:'🥘',img:U('1544025162-d76694265947'),desc:'Daging sapi empuk dimasak 6 jam dengan santan dan rempah pilihan.'},
+  {id:3,name:'Ayam Bakar Madu',cat:'Main Course',price:48000,e:'🍗',img:U('1555939594-58d7cb561ad1'),desc:'Ayam kampung bumbu madu, disajikan dengan sambal matah dan lalapan.'},
+  {id:4,name:'Spaghetti Aglio Olio Udang',cat:'Main Course',price:56000,e:'🍝',img:U('1621996346565-e3dbc646d9a9'),desc:'Pasta bawang putih, cabai kering, dan udang segar.'},
+  {id:5,name:'Lumpia Semarang',cat:'Appetizer',price:28000,e:'🥟',img:U('1482049016688-2d3e1b311543'),desc:'Lumpia goreng isi rebung dan ayam, dengan saus manis khas.'},
+  {id:6,name:'Salad Sayur Segar',cat:'Appetizer',price:32000,e:'🥗',img:U('1546069901-ba9599a7e63c'),desc:'Sayuran segar dengan dressing lemon dan wijen sangrai.'},
+  {id:7,name:'Tahu Crispy Sambal Dabu',cat:'Appetizer',price:24000,e:'🧆',img:U('1476224203421-9ac39bcb3327'),desc:'Tahu goreng renyah dengan sambal dabu-dabu segar.'},
+  {id:8,name:'Pisang Bakar Cokelat Keju',cat:'Dessert',price:26000,e:'🍌',img:U('1567620905732-2d1ec7ab7445'),desc:'Pisang bakar hangat dengan cokelat leleh dan parutan keju.'},
+  {id:9,name:'Es Krim Vanila Gula Aren',cat:'Dessert',price:30000,e:'🍨',img:U('1563805042-7684c019e1cb'),desc:'Es krim vanila buatan sendiri dengan saus gula aren.'},
+  {id:10,name:'Choco Lava Cake',cat:'Dessert',price:38000,e:'🍰',img:U('1488477181946-6428a0291777'),desc:'Kue cokelat dengan isian lava yang lumer di dalam.'},
+  {id:11,name:'Es Kopi Susu Aren',cat:'Beverages',price:24000,e:'☕',img:U('1509042239860-f550ce710b93'),desc:'Espresso, susu segar, dan gula aren dalam satu gelas dingin.'},
+  {id:12,name:'Es Teh Lemon Serai',cat:'Beverages',price:18000,e:'🍹',img:U('1556679343-c7306c1976bc'),desc:'Teh melati dengan perasan lemon dan aroma serai.'}
+ ];
+ const $ = s => document.querySelector(s);
+ const $$ = s => document.querySelectorAll(s);
+ const rp = n => 'Rp' + Math.round(n).toLocaleString('id-ID');
+ let cart = [], promo = null, filter = 'all', toastT;
+
+ try { cart = JSON.parse(localStorage.getItem('ds_cart') || '[]'); promo = JSON.parse(localStorage.getItem('ds_promo') || 'null'); } catch(e) { cart = []; promo = null; }
+ if (!Array.isArray(cart)) cart = [];
+ const save = () => { try { localStorage.setItem('ds_cart', JSON.stringify(cart)); localStorage.setItem('ds_promo', JSON.stringify(promo)); } catch(e){} };
+ const find = id => PRODUCTS.find(p => p.id === id);
+ const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+ function toast(msg){
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2200);
+ }
+
+ function renderMenu(){
+  const list = filter === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.cat === filter);
+  $('#menuGrid').innerHTML = list.map(p => `
+   <article class="card">
+    <div class="thumb">${p.e}<img src="${p.img}" alt="${esc(p.name)}" loading="lazy" onerror="this.style.display='none'"></div>
+    <div class="cbody">
+     <span class="cat">${p.cat}</span>
+     <h3>${esc(p.name)}</h3>
+     <p>${esc(p.desc)}</p>
+     <div class="cfoot"><span class="price">${rp(p.price)}</span><button class="add" data-add="${p.id}">Add to Cart</button></div>
+    </div>
+   </article>`).join('');
+ }
+
+ function totals(){
+  const sub = cart.reduce((s, c) => s + find(c.id).price * c.qty, 0);
+  const disc = promo ? sub * promo.pct / 100 : 0;
+  return {sub, disc, total: sub - disc};
+ }
+
+ function renderCart(){
+  const count = cart.reduce((s, c) => s + c.qty, 0);
+  $('#badge').textContent = count;
+  $('#items').innerHTML = cart.length ? cart.map(c => {
+   const p = find(c.id);
+   return `<div class="item">
+    <div class="im">${p.e}<img src="${p.img}" alt="" onerror="this.style.display='none'"></div>
+    <div><b>${esc(p.name)}</b><small>${rp(p.price)}</small>
+     <div class="qty"><button data-dec="${p.id}" aria-label="Kurangi">−</button><span>${c.qty}</span><button data-inc="${p.id}" aria-label="Tambah">+</button></div></div>
+    <div style="text-align:right"><b>${rp(p.price * c.qty)}</b><br><button class="rm" data-rm="${p.id}">Hapus</button></div>
+   </div>`;
+  }).join('') : '<div class="empty">Keranjangmu masih kosong.<br>Pilih hidangan dari menu untuk mulai memesan.</div>';
+  const t = totals();
+  $('#subtotal').textContent = rp(t.sub);
+  $('#promoRow').hidden = !(promo && cart.length);
+  if (promo) { $('#promoName').textContent = 'Promo ' + promo.code + ' (' + promo.pct + '%)'; $('#promoAmt').textContent = '−' + rp(t.disc); }
+  $('#total').textContent = rp(cart.length ? t.total : 0);
+  save();
+ }
+
+ function addToCart(id){
+  const item = cart.find(c => c.id === id);
+  item ? item.qty++ : cart.push({id, qty:1});
+  renderCart(); toast(find(id).name + ' ditambahkan ke keranjang');
+ }
+ function changeQty(id, d){
+  const item = cart.find(c => c.id === id); if (!item) return;
+  item.qty += d;
+  if (item.qty <= 0) cart = cart.filter(c => c.id !== id);
+  renderCart();
+ }
+ function removeItem(id){ cart = cart.filter(c => c.id !== id); renderCart(); toast('Item dihapus dari keranjang'); }
+
+ function setDrawer(open){
+  $('#drawer').classList.toggle('show', open);
+  $('#overlay').classList.toggle('show', open);
+  $('#drawer').setAttribute('aria-hidden', String(!open));
+  document.body.style.overflow = open ? 'hidden' : '';
+ }
+ function setModal(open){ $('#modal').classList.toggle('show', open); }
+
+ function checkout(){
+  if (!cart.length) { toast('Keranjang masih kosong'); return; }
+  const t = totals();
+  const lines = cart.map(c => { const p = find(c.id); return `<div class="row"><span>${c.qty}× ${esc(p.name)}</span><span>${rp(p.price * c.qty)}</span></div>`; }).join('');
+  $('#mbox').innerHTML = `
+   <h3>Ringkasan pesanan</h3>
+   <div class="sum">${lines}<hr style="border:0;border-top:1px solid var(--line);margin:10px 0">
+    <div class="row"><span>Subtotal</span><span>${rp(t.sub)}</span></div>
+    ${promo ? `<div class="row promo"><span>Promo ${promo.code}</span><span>−${rp(t.disc)}</span></div>` : ''}
+    <div class="row total" style="margin:8px 0 0"><span>Total</span><span>${rp(t.total)}</span></div></div>
+   <form id="coForm" style="padding:0;border:0;background:none" novalidate>
+    <label>Nama pemesan<input id="coName" required placeholder="Nama lengkap"></label>
+    <label>Alamat pengantaran<textarea id="coAddr" required style="min-height:80px" placeholder="Alamat lengkap"></textarea></label>
+    <div class="msg" id="coMsg" style="color:#a33"></div>
+    <button class="btn btn-primary" type="submit">Konfirmasi pesanan</button>
+    <button class="btn btn-ghost" type="button" id="coCancel">Kembali</button>
+   </form>`;
+  setDrawer(false); setModal(true);
+  $('#coCancel').onclick = () => setModal(false);
+  $('#coForm').onsubmit = e => {
+   e.preventDefault();
+   const n = $('#coName').value.trim(), a = $('#coAddr').value.trim();
+   if (!n || !a) { $('#coMsg').textContent = 'Isi nama dan alamat terlebih dahulu.'; return; }
+   const code = 'DS-' + Date.now().toString().slice(-6);
+   $('#mbox').innerHTML = `<h3>Pesanan diterima 🎉</h3>
+    <p>Terima kasih, <b>${esc(n)}</b>. Pesanan <b>${code}</b> sedang kami siapkan dan akan tiba dalam sekitar 30 menit.</p>
+    <div class="sum"><div class="row total" style="margin:0"><span>Total bayar</span><span>${rp(t.total)}</span></div></div>
+    <button class="btn btn-primary" id="coDone">Selesai</button>`;
+   cart = []; promo = null; renderCart();
+   $('#coDone').onclick = () => setModal(false);
+  };
+ }
+
+ /* Events */
+ $('#menuGrid').addEventListener('click', e => { const b = e.target.closest('[data-add]'); if (b) addToCart(+b.dataset.add); });
+ $('#items').addEventListener('click', e => {
+  const t = e.target.closest('button'); if (!t) return;
+  if (t.dataset.inc) changeQty(+t.dataset.inc, 1);
+  if (t.dataset.dec) changeQty(+t.dataset.dec, -1);
+  if (t.dataset.rm) removeItem(+t.dataset.rm);
+ });
+ $('#tabs').addEventListener('click', e => {
+  const t = e.target.closest('.tab'); if (!t) return;
+  $$('.tab').forEach(x => x.classList.remove('active')); t.classList.add('active');
+  filter = t.dataset.cat; renderMenu();
+ });
+ $$('[data-promo]').forEach(b => b.addEventListener('click', () => {
+  promo = {code: b.dataset.promo, pct: +b.dataset.pct}; renderCart();
+  toast('Promo ' + promo.code + ' diterapkan: diskon ' + promo.pct + '%');
+ }));
+ const openOrder = () => { cart.length ? setDrawer(true) : (toast('Pilih menu favoritmu dulu'), $('#menu').scrollIntoView({behavior:'smooth'})); };
+ $('#orderNav').onclick = openOrder; $('#orderHero').onclick = openOrder;
+ $('#openCart').onclick = () => setDrawer(true);
+ $('#closeCart').onclick = () => setDrawer(false);
+ $('#overlay').onclick = () => setDrawer(false);
+ $('#checkoutBtn').onclick = checkout;
+ $('#modal').addEventListener('click', e => { if (e.target.id === 'modal') setModal(false); });
+ document.addEventListener('keydown', e => { if (e.key === 'Escape') { setDrawer(false); setModal(false); } });
+
+ const burger = $('#burger'), links = $('#links');
+ burger.onclick = () => { const o = links.classList.toggle('open'); burger.classList.toggle('open', o); burger.setAttribute('aria-expanded', String(o)); };
+ links.addEventListener('click', e => { if (e.target.tagName === 'A') { links.classList.remove('open'); burger.classList.remove('open'); burger.setAttribute('aria-expanded','false'); } });
+
+ $('#contactForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const n = $('#cName').value.trim(), m = $('#cEmail').value.trim(), s = $('#cMsg').value.trim(), out = $('#formMsg');
+  if (!n || !s) { out.style.color = '#a33'; out.textContent = 'Nama dan pesan wajib diisi.'; return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(m)) { out.style.color = '#a33'; out.textContent = 'Masukkan alamat email yang valid.'; return; }
+  out.style.color = '#2e7d32'; out.textContent = 'Terima kasih, ' + n + '. Pesanmu sudah terkirim.';
+  e.target.reset(); toast('Pesan terkirim');
+ });
+
+ /* Scroll: reveal + active link */
+ if ('IntersectionObserver' in window) {
+  const io = new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting) { x.target.classList.add('in'); io.unobserve(x.target); } }), {threshold:.12});
+  $$('.reveal').forEach(el => io.observe(el));
+  const so = new IntersectionObserver(es => es.forEach(x => {
+   if (x.isIntersecting) $$('.links a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + x.target.id));
+  }), {rootMargin:'-45% 0px -50% 0px'});
+  $$('main section[id]').forEach(s => so.observe(s));
+ } else { $$('.reveal').forEach(el => el.classList.add('in')); }
+
+ $('#year').textContent = new Date().getFullYear();
+ renderMenu(); renderCart();
+})();
+</script>
+</body>
+</html>
